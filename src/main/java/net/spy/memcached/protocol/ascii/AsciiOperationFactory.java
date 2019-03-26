@@ -91,6 +91,10 @@ public class AsciiOperationFactory extends BaseOperationFactory {
     return new GetOperationImpl(key, cb);
   }
 
+  public GetOperation getWithErasures(String key, Collection<Integer> erasures, GetOperation.Callback cb) {
+    return new GetWithErasuresOperationImpl(key, erasures, cb);
+  }
+
   public GetOperation get(Collection<String> keys, GetOperation.Callback cb) {
     return new GetOperationImpl(keys, cb);
   }

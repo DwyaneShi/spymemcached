@@ -100,6 +100,10 @@ public class BinaryOperationFactory extends BaseOperationFactory {
     return new GetOperationImpl(key, callback);
   }
 
+  public GetOperation getWithErasures(String key, Collection<Integer> erasures, Callback callback) {
+    throw new RuntimeException("Operation not supported");
+  }
+
   public ReplicaGetOperation replicaGet(String key, int index,
     ReplicaGetOperation.Callback callback) {
     return new ReplicaGetOperationImpl(key, index, callback);

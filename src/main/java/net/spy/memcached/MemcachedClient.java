@@ -1059,6 +1059,66 @@ public class MemcachedClient extends SpyObject implements MemcachedClientIF,
   }
 
   /**
+   * Get the given key asynchronously.
+   *
+   * @param <T>
+   * @param key the key to fetch
+   * @param erasures the erasures
+   * @param tc the transcoder to serialize and unserialize value
+   * @return a future that will hold the return value of the fetch
+   * @throws IllegalStateException in the rare circumstance where queue is too
+   *           full to accept any more requests
+   */
+  @Override
+  public <T> GetFuture<T> asyncGetWithErasures(final String key,
+                                               final Collection<Integer> erasures,
+                                               final Transcoder<T> tc) {
+
+    final CountDownLatch latch = new CountDownLatch(1);
+    final GetFuture<T> rv = new GetFuture<T>(latch, operationTimeout, key,
+        executorService);
+    Operation op = opFact.getWithErasures(key, erasures, new GetOperation.Callback() {
+      private Future<T> val;
+
+      @Override
+      public void receivedStatus(OperationStatus status) {
+        rv.set(val, status);
+      }
+
+      @Override
+      public void gotData(String k, int flags, byte[] data) {
+        assert key.equals(k) : "Wrong key returned";
+        val =
+            tcService.decode(tc, new CachedData(flags, data, tc.getMaxSize()));
+      }
+
+      @Override
+      public void complete() {
+        latch.countDown();
+        rv.signalComplete();
+      }
+    });
+    rv.setOperation(op);
+    mconn.enqueueOperation(key, op);
+    return rv;
+  }
+
+  /**
+   * Get the given key asynchronously and decode with the default transcoder.
+   *
+   * @param key the key to fetch
+   * @param erasures the erasures
+   * @return a future that will hold the return value of the fetch
+   * @throws IllegalStateException in the rare circumstance where queue is too
+   *           full to accept any more requests
+   */
+  @Override
+  public GetFuture<Object> asyncGetWithErasures(final String key,
+                                                final Collection<Integer> erasures) {
+    return asyncGetWithErasures(key, erasures, transcoder);
+  }
+
+  /**
    * Gets (with CAS support) the given key asynchronously.
    *
    * @param <T>

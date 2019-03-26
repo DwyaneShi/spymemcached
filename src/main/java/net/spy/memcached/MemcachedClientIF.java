@@ -105,6 +105,10 @@ public interface MemcachedClientIF {
 
   Future<Object> asyncGet(String key);
 
+  <T> Future<T> asyncGetWithErasures(String key, Collection<Integer> erasures, Transcoder<T> tc);
+
+  Future<Object> asyncGetWithErasures(String key, Collection<Integer> erasures);
+
   Future<CASValue<Object>> asyncGetAndTouch(final String key, final int exp);
 
   <T> Future<CASValue<T>> asyncGetAndTouch(final String key, final int exp,
