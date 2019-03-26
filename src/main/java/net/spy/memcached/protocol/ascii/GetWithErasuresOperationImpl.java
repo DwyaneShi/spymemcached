@@ -194,17 +194,21 @@ class GetWithErasuresOperationImpl extends OperationImpl implements GetOperation
   @Override
   public final void initialize() {
     // Figure out the length of the request
-    int size = 6; // Enough for gets\r\n
+    int size = CMD.getBytes().length;
+    // for whitespace
+    size++;
+
     Collection<byte[]> keyBytes = KeyUtil.getKeyBytes(keys);
     for (byte[] k : keyBytes) {
       size += k.length;
+      // for whitespace
       size++;
     }
 
-    // for whitespace
-    size++;
     // for erasures
     size += erasures.getBytes().length;
+    // for \r\n
+    size += RN_BYTES.length;
 
     ByteBuffer b = ByteBuffer.allocate(size);
     b.put(CMD.getBytes());
