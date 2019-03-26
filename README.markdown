@@ -69,5 +69,5 @@ extensive tutorial to help new users learn how to use Spymemcached.
 ## Deploy local jar into maven repo
 
 ```shell
-mvn deploy:deploy-file -Durl=file:///home/shi.876/git/spymemcached/build/jars -Dfile=spymemcached-2.12.3.jar -DgroupId=osu.spy -DartifactId=spymemcached -Dpackaging=jar -Dversion=2.12.3
+mvn deploy:deploy-file -Durl=file://${HOME}/local-repo -Dfile=spymemcached-2.12.3.jar -DgroupId=osu.spy -DartifactId=spymemcached -Dpackaging=jar -Dversion=2.12.3
 ```
