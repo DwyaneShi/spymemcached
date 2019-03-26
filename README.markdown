@@ -65,3 +65,9 @@ contains the latest Spymemcached source.
 At [couchbase.org](http://www.couchbase.org/code/couchbase/java) you
 can find a download's section for the latest release as well as an
 extensive tutorial to help new users learn how to use Spymemcached.
+
+## Deploy local jar into maven repo
+
+```shell
+mvn deploy:deploy-file -Durl=file:///home/shi.876/git/spymemcached/build/jars -Dfile=spymemcached-2.12.3.jar -DgroupId=osu.spy -DartifactId=spymemcached -Dpackaging=jar -Dversion=2.12.3
+```
